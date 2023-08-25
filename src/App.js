@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+// import './App.css';
+
+// function App() {
+//   return (
+//    <h1>Hello React App</h1>
+//   );
+// }
+
+// export default App;
+
+import React, { useState } from 'react';
 import './App.css';
+import ContactList from './components/ContactList';
+import ContactDetails from './components/ContactDetails';
 
 function App() {
+  const [selectedContact, setSelectedContact] = useState(null);
+
+  const handleSelectContact = async contact => {
+    try {
+      const response = await fetch(`/api/contacts/${contact.id}`);
+      const data = await response.json();
+      setSelectedContact(data);
+    } catch (error) {
+      console.error('Error fetching contact details:', error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Contact Management System</h1>
+      <ContactList onSelectContact={handleSelectContact} />
+      <ContactDetails contact={selectedContact} />
     </div>
   );
 }
 
 export default App;
+
